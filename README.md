@@ -1,18 +1,42 @@
-# Video-editor-test1
+# 🎬 Video-editor-test1
 
-## ¿Qué hace este repositorio?
-`Video-editor-test1` es un proyecto enfocado en la edición, procesamiento y automatización de archivos de video. Permite realizar operaciones como recorte, ensamblado de clips, ajuste de pistas de audio y aplicación de transformaciones de forma programática, facilitando la integración de la edición de video en flujos de trabajo automatizados.
+Un sistema automatizado desarrollado para la manipulación, edición y renderizado de video de forma programática. Este proyecto está diseñado para eliminar la necesidad de herramientas de edición manuales mediante scripts configurables que gestionan cortes, transiciones, superposición de audio y renderizado final.
 
-## Características
-- **Procesamiento de Video:** Automatización de tareas de corte, renderizado y combinación de clips.
-- **Exportación Flexible:** Generación de archivos de salida en formatos estándar listos para publicación.
-- **Optimización de Flujo de Trabajo:** Reducción de tiempos de edición manual mediante scripts.
+---
 
-## Requisitos Previos
-- Python 3.8+ (o el entorno de ejecución configurado)
-- **FFmpeg** instalado en las variables de entorno del sistema
+## 📋 Descripción General
 
-## Instalación
-```bash
-git clone [https://github.com/iasinhumo2026/Video-editor-test1.git](https://github.com/iasinhumo2026/Video-editor-test1.git)
-cd Video-editor-test1
+`Video-editor-test1` permite procesar archivos multimedia en lote o individualmente mediante código. Integra motores de renderizado como FFmpeg y bibliotecas de procesamiento audiovisual para realizar tareas complejas de edición con precisión por fotograma.
+
+---
+
+## ✨ Características Principales
+
+- **Corte y Empalme Preciso:** Unificación y segmentación de videos en puntos exactos sin pérdida de calidad.
+- **Procesamiento Multicanal de Audio:** Extracción, reemplazo, normalización de volumen y mezcla de pistas de audio background con locuciones.
+- **Efectos y Transiciones Programadas:** Aplicación de *fades* (fundidos de entrada/salida), filtros de color, reescalado de resolución y ajuste de tasa de fotogramas (FPS).
+- **Incrustación de Metadatos y Subtítulos:** Inserción automática de subtítulos (Soft/Hard subs) y etiquetas de metadatos en los archivos de salida.
+- **Exportación Multi-Formato:** Generación de archivos optimizados para distintas plataformas (MP4, MKV, MOV, WebM).
+
+---
+
+## 🏗️ Estructura del Proyecto
+
+```text
+Video-editor-test1/
+├── assets/                  # Recursos estáticos (imágenes, marcas de agua, clips base)
+│   ├── audio/               # Efectos de sonido y música de fondo
+│   └── fonts/               # Tipografías para la superposición de texto
+├── config/                  # Archivos de configuración (JSON/YAML)
+│   └── settings.json        # Parámetros por defecto de renderizado y rutas
+├── input/                   # Directorio para archivos de origen (videos/audio crudo)
+├── output/                  # Directorio para archivos procesados y renderizados
+├── src/                     # Código fuente del proyecto
+│   ├── audio_processing.py  # Módulos de manipulación de audio
+│   ├── editor.py            # Lógica central del motor de edición
+│   ├── ffmpeg_utils.py      # Envolventes y comandos de bajo nivel para FFmpeg
+│   └── utils.py             # Funciones auxiliares y de gestión de archivos
+├── .gitignore
+├── main.py                  # Punto de entrada principal
+├── requirements.txt         # Dependencias del proyecto
+└── README.md
