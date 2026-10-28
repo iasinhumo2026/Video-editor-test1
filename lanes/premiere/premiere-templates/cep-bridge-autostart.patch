@@ -1,0 +1,41 @@
+# CEP bridge autostart patch (2026-07-29) — re-apply after any vendor/premiere-mcp
+# re-clone or cep-plugin re-copy: cd to the cep-plugin (or installed panel) dir and
+#   patch -p1 < lanes/premiere/premiere-templates/cep-bridge-autostart.patch
+# Makes the panel auto-open (<StartOn>) and auto-start the bridge (shim in bridge-cep.js).
+--- a/bridge-cep.js
++++ b/bridge-cep.js
+@@ -619,3 +619,22 @@
+         window.bridge = new MCPPremiereBridge();
+     });
+ })();
++
++/* --- REPO-PATCH: autostart (video-editor) -------------------------------
++   Starts the bridge on panel load so no human has to click "Start Bridge".
++   Config (temp dir) is already loaded from disk by init() at construction.
++   Idempotent: re-applying this file is safe, and the guard prevents a
++   double-start if the panel is reloaded. Remove this block to restore the
++   stock click-to-start behaviour. --------------------------------------- */
++document.addEventListener('DOMContentLoaded', function () {
++    setTimeout(function () {
++        try {
++            if (window.bridge && !window.bridge.isConnected) {
++                window.bridge.log('Autostart (repo patch): starting bridge...', 'info');
++                window.startBridge();
++            }
++        } catch (e) {
++            if (window.bridge) window.bridge.log('Autostart failed: ' + e, 'error');
++        }
++    }, 1500);
++});
+--- a/CSXS/manifest.xml
++++ b/CSXS/manifest.xml
+@@ -26,6 +26,9 @@
+         </Resources>
+         <Lifecycle>
+           <AutoVisible>true</AutoVisible>
++          <StartOn>
++            <Event>com.adobe.csxs.events.ApplicationActivate</Event>
++          </StartOn>
+         </Lifecycle>
+         <UI>
+           <Type>Panel</Type>

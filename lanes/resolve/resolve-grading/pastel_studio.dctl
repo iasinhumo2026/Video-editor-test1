@@ -1,0 +1,105 @@
+// @mcp-dctl name=pastel_studio_v3 kind=transform
+// Cinematic pastel studio for intro.mp4 (bt709 1920x1080).
+// Written using only constructs that appear in Blackmagic's own DaVinciCTL samples.
+
+__DEVICE__ float smoothStep(float p_Edge0, float p_Edge1, float p_Val)
+{
+    p_Val = _saturatef((p_Val - p_Edge0) / (p_Edge1 - p_Edge0));
+    return p_Val * p_Val * (3.0f - 2.0f * p_Val);
+}
+
+__DEVICE__ float shoulder(float p_X, float p_Knee, float p_Amt)
+{
+    const float span = 1.0f - p_Knee;
+    const float t = _saturatef((p_X - p_Knee) / span);
+    const float c = (1.0f - _expf(-t * p_Amt)) / (1.0f - _expf(-p_Amt));
+    const float hi = p_Knee + span * c;
+    return _mix(hi, p_X, smoothStep(p_Knee, p_Knee - 0.001f, p_X));
+}
+
+__DEVICE__ float3 transform(int p_Width, int p_Height, int p_X, int p_Y, float p_R, float p_G, float p_B)
+{
+    const float exposure = 1.06f;
+    const float wbR = 0.958f;
+    const float wbG = 1.062f;
+    const float wbB = 0.988f;
+    const float knee = 0.62f;
+    const float shoulderAmt = 1.75f;
+    const float liftR = 0.056f;
+    const float liftG = 0.054f;
+    const float liftB = 0.068f;
+    const float midGamma = 1.09f;
+    const float sat = 0.79f;
+    const float hiDesat = 0.32f;
+    const float shDesat = 0.22f;
+    const float skinAmt = 0.26f;
+    const float vigAmt = 0.14f;
+
+    float r = _fmaxf(p_R, 0.0f);
+    float g = _fmaxf(p_G, 0.0f);
+    float b = _fmaxf(p_B, 0.0f);
+
+    // 1. Exposure + white balance: pull the magenta wash off the room without
+    //    fully neutralizing it, so the RGB lamp stays a deliberate lilac accent.
+    r = r * exposure * wbR;
+    g = g * exposure * wbG;
+    b = b * exposure * wbB;
+
+    // 2. Filmic shoulder so the blown softbox rolls instead of clipping hard.
+    r = shoulder(r, knee, shoulderAmt);
+    g = shoulder(g, knee, shoulderAmt);
+    b = shoulder(b, knee, shoulderAmt);
+
+    // 3. Milky lifted floor tinted cool lavender: the pastel signature.
+    r = liftR + r * (1.0f - liftR);
+    g = liftG + g * (1.0f - liftG);
+    b = liftB + b * (1.0f - liftB);
+
+    // 4. Midtone gamma lift, opens the room without touching the shoulder.
+    const float ig = 1.0f / midGamma;
+    r = _powf(_saturatef(r), ig);
+    g = _powf(_saturatef(g), ig);
+    b = _powf(_saturatef(b), ig);
+
+    const float luma = 0.2126f * r + 0.7152f * g + 0.0722f * b;
+
+    // 5. Luma-dependent saturation: chalky at both ends, alive in the mids.
+    float satMul = sat;
+    satMul = satMul * (1.0f - hiDesat * smoothStep(0.58f, 1.0f, luma));
+    satMul = satMul * (1.0f - shDesat * (1.0f - smoothStep(0.0f, 0.16f, luma)));
+
+    // 6. Skin protect: skin is the only large mid-exposure region with a clean
+    //    R > G > B ladder, so give it back saturation and keep the face warm.
+    const float ladder = smoothStep(0.02f, 0.14f, r - g) * smoothStep(0.01f, 0.10f, g - b);
+    const float skinW = ladder * smoothStep(0.22f, 0.34f, luma) * (1.0f - smoothStep(0.72f, 0.88f, luma));
+    satMul = satMul * (1.0f + skinAmt * skinW);
+
+    r = luma + (r - luma) * satMul;
+    g = luma + (g - luma) * satMul;
+    b = luma + (b - luma) * satMul;
+
+    // 7. Split tone: cool blue-violet shadows, warm cream highlights.
+    const float shW = (1.0f - luma) * (1.0f - luma);
+    const float hiW = luma * luma;
+    r = r + (-0.004f * shW + 0.013f * hiW);
+    g = g + (0.001f * shW + 0.005f * hiW);
+    b = b + (0.013f * shW - 0.011f * hiW);
+
+    // 7b. Mid blush so the wall lands on soft blush, not neutral white.
+    const float midW = 4.0f * luma * (1.0f - luma);
+    r = r + midW * 0.012f;
+    g = g + midW * 0.001f;
+    b = b + midW * 0.006f;
+
+    // 8. Vignette. This is what a .cube LUT cannot do: a LUT is color-in/color-out
+    //    with no idea where the pixel sits in the frame.
+    const float centerX = 0.5f * p_Width;
+    const float centerY = 0.5f * p_Height;
+    const float dist = _hypotf(p_X - centerX, p_Y - centerY) / min(p_Width, p_Height);
+    const float vig = 1.0f - vigAmt * smoothStep(0.30f, 0.72f, dist);
+    r = r * vig;
+    g = g * vig;
+    b = b * vig;
+
+    return make_float3(_saturatef(r), _saturatef(g), _saturatef(b));
+}

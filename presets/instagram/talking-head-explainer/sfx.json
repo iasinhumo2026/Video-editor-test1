@@ -1,0 +1,367 @@
+{
+  "_": "talking-head-explainer SFX map. WHAT only: event -> sound -> slice -> fixed clip level -> lead. Every level, slice and lead is the creator's own hand pass read off his finished timeline (2026-09-23), so the automatic first pass starts where his hand pass ended. The WHY, the decision ladder and the density per passage: sfx.md (this folder); the house law it extends: presets/youtube/default/sfx.md. Read by workflows/sfx-plan.py because the plan's `preset` is this folder; placement is per lane (LANES.md step 6).",
+  "library": "assets/sfx",
+  "targets_dbfs": {
+    "_": "on-timeline PEAK per class; the clip level is target minus the measured slice peak, whole dB, capped at +6; an event carrying level_db uses that fixed clip level instead (every event here does, beds at -23 to -26 per sfx.md law 16: these bands are only the FALLBACK for an event added to the map before its level is set, and sfx-plan.py reads them then); the voice ceiling these bands sit under is the -6 dBFS limiter of step 3",
+    "whoosh": -4,
+    "transient": -6,
+    "tick": -6,
+    "marker": -9,
+    "character": -10,
+    "soft": -12,
+    "bed": -18
+  },
+  "tracks": {
+    "_": "LAYER ROLES, not a fixed layout: primary (structure: every cut-in and most entrances) / layer2 (a different sound overlapping one still ringing) / layer3 (a third concurrent sound) / music; a bed takes the lowest layer free under its span like any other sound (sfx.md law 15). The values are the 0-based audio track indices of the Premiere map (A2/A3/A4/A5, the voice on A1); a lane whose audio tracks are laid out differently maps by ROLE and ignores the numbers",
+    "primary": 1,
+    "layer2": 2,
+    "layer3": 3,
+    "music": 4
+  },
+  "layer_window_frames": 2,
+  "riser_gap_s": 0.45,
+  "stamp_owns_beat_s": 0.6,
+  "max_per_second": 3,
+  "_density": "2026-09-10: a slam/Impact owns ±stamp_owns_beat_s of its own graphic (the scissors around it, the stroke under it, a pop are dropped; the cut-in, the scene changes (slideIn/slideOut), beds and hand entries stay); across all graphics never more than max_per_second sounds in a rolling second (lowest priority goes: marker < word < rise/slide < pop < slam < cut-in < Impact/character; beds not counted; hand entries never dropped). presets/youtube/default/sfx.md § Density (the house rule; this folder's sfx.md § 5 gives the per-passage outcome).",
+  "events": {
+    "cut-in": {
+      "class": "whoosh",
+      "file": "Whoosh Short 2.mp3",
+      "slices": [[0.0, 0.693]],
+      "whole_file": true,
+      "level_db": -4,
+      "lead_frames": 2,
+      "_": "the LAYOUT changing: every hard cut from the face (W, T or an overlay card) into the panel or a full-screen (S or F), and every S <-> F switch, takes this one whoosh 2 f early, so the ear learns the grammar and the seam hides; a cut between sibling graphics inside the panel takes the incoming element's own sound instead"
+    },
+    "riseIn": {
+      "class": "soft",
+      "file": "Simple Whoosh 1.wav",
+      "slices": [[0.0, 0.467]],
+      "whole_file": true,
+      "level_db": -2,
+      "_": "an object, card or panel rising or dropping in: the soft whoosh ON its first frame; a riseIn on TYPE is still remapped by sfx-plan to `word` (the scissors)"
+    },
+    "slideIn": {
+      "class": "whoosh",
+      "file": "Simple Whoosh 2.wav",
+      "slices": [[0.0, 0.312]],
+      "whole_file": true,
+      "level_db": -2,
+      "_": "a slide in: the slide whoosh ON the frame; movement is a whoosh, never a stamp"
+    },
+    "slideOut": {
+      "class": "whoosh",
+      "file": "Simple Whoosh 2.wav",
+      "slices": [[0.0, 0.312]],
+      "whole_file": true,
+      "level_db": -2,
+      "_": "a slide out, a collapse, an element leaving across the frame: the same slide whoosh (a plain exit is silent, see `_silent`)"
+    },
+    "travel": {
+      "class": "whoosh",
+      "file": "Fast Whoosh.wav",
+      "slices": [[0.0, 0.79]],
+      "whole_file": true,
+      "level_db": -8,
+      "lead_frames": 2,
+      "_": "an object flying or docking to a new place: the travel whoosh 2 f early, even when it seats at the end (a docking stamp was rejected for this: the visible thing is the travel)"
+    },
+    "send": {
+      "class": "soft",
+      "file": "Simple Whoosh 1.wav",
+      "slices": [[0.0, 0.25]],
+      "level_db": 0,
+      "_": "a light send inside a moving recording (a bubble rises, the view moves): a trimmed light whoosh, not click + pop (click + pop stays for a static chat or a real cursor)"
+    },
+    "reply": {
+      "class": "whoosh",
+      "file": "Simple Whoosh 2.wav",
+      "slices": [[0.0, 0.312]],
+      "whole_file": true,
+      "level_db": 0,
+      "_": "a reply sliding into an empty chat: the slide whoosh at full clip level, since nothing else is on the beat"
+    },
+    "pop": {
+      "class": "transient",
+      "file": "Pop 1.wav",
+      "slices": [[0.46, 0.71]],
+      "level_db": 0,
+      "_": "the SIBLING pop: an object landing beside others (an icon, an avatar, a message in a static chat), clip ON its first frame so the attack sits on the back.out landing"
+    },
+    "pop-hero": {
+      "class": "transient",
+      "file": "Pop 1.wav",
+      "slices": [[0.0, 0.25], [0.08, 0.33]],
+      "level_db": 2,
+      "_": "the HERO object of a graphic, and a CTA keyword or card landing (an object: a pop, never the Impact): the fullest pop, hottest level"
+    },
+    "pop-cascade": {
+      "class": "transient",
+      "file": "Pop 1.wav",
+      "slices": [[0.88, 1.08], [1.17, 1.25]],
+      "level_db": -6,
+      "_": "the later objects of a cascade: the pattern is already heard, so each repeat needs less level"
+    },
+    "pop-run": {
+      "class": "transient",
+      "file": "Pop 1.wav",
+      "slices": [[0.0, 0.29], [0.46, 0.71], [0.88, 1.08], [1.17, 1.38], [0.08, 0.33]],
+      "level_db": -7,
+      "_": "a fast burst of one kind of object (3-4 f apart): ONE gesture, one track, one flat level, the five house hits rotating and each truncating the last (mixed hero/sibling/cascade levels across a run were flattened to this by hand); the fourth runs on into the file's digital silence to 1.38 so every slice outlasts a 4 f gap, because the planner keeps a repeat on its layer only while it still overlaps"
+    },
+    "row-tick": {
+      "class": "transient",
+      "file": "Pop 1.wav",
+      "slices": [[0.88, 1.08], [1.17, 1.25]],
+      "level_db": -6,
+      "_": "a list row or rule ticking on (sfx-plan turns a pop inside a list/card cell into this): the cascade pop, never the Lighter tick, which was rejected on this format"
+    },
+    "bubble": {
+      "class": "transient",
+      "file": "Bubble Pop.wav",
+      "slices": [[2.336, 2.545]],
+      "level_db": -4,
+      "_": "a round bubble or orb appearing: the literal bubbly pop, attack 1-3 f after the orb starts"
+    },
+    "char-run": {
+      "class": "tick",
+      "file": "Metal Pop.wav",
+      "slices": [[0.5, 0.583]],
+      "level_db": -3,
+      "_": "characters or avatars appearing in quick succession: 2-frame metal slices back to back on one track, each truncating the last, the attack on each landing"
+    },
+    "char-last": {
+      "class": "tick",
+      "file": "Metal Pop.wav",
+      "slices": [[0.5, 0.79]],
+      "level_db": -3,
+      "_": "the last character of a run: the same hit left to ring out, which closes the gesture"
+    },
+    "bump": {
+      "class": "transient",
+      "file": "Metal Pop.wav",
+      "slices": [[0.5, 0.83]],
+      "level_db": -7,
+      "_": "the punchline's scale bump on its last word: a light metal tick on the layer below, so the beat lands without a new accent"
+    },
+    "word": {
+      "class": "transient",
+      "file": "Scissors.wav",
+      "slices": [[0.63, 0.75], [1.21, 1.42], [2.25, 2.46], [4.55, 4.67], [5.55, 5.67]],
+      "level_db": -7,
+      "_": "every word of a RISE text animation: the house scissors at the fixed -7 (2026-09-23: the default rise-in with the scissor sound on short-form too); type never pops"
+    },
+    "snap": {
+      "class": "transient",
+      "file": "Scissors.wav",
+      "slices": [[0.542, 0.834]],
+      "level_db": 0,
+      "lead_frames": 2,
+      "_": "a typographic glyph snapping in, or a hard snap-cut inside a graphic: ONE loud snip, 2 f early so its attack lands on the frame"
+    },
+    "word-slam": {
+      "class": "character",
+      "file": "Impact.wav",
+      "slices": [[0.93, 2.5]],
+      "level_db": -10,
+      "offset_frames": 2,
+      "_": "a SLAM text animation (a figure, a claim word): the Impact 2 f after each word's onset, on the settle; the run truncates itself and the last word rings"
+    },
+    "slam": {
+      "class": "character",
+      "file": "Impact.wav",
+      "slices": [[0.93, 2.5]],
+      "level_db": -10,
+      "offset_frames": 2,
+      "_": "a registry slam resolves to the same Impact, because only TYPE slams on this format: objects never slam here, and a dock is `travel`"
+    },
+    "tap": {
+      "class": "tick",
+      "file": "Texting On Phone.mp3",
+      "slices": [[0.417, 0.583], [0.792, 0.917], [1.168, 1.335], [1.376, 1.501], [1.96, 2.169], [2.794, 3.169], [4.963, 5.297]],
+      "level_db": 0,
+      "_": "a touch on a phone (answering, a digit keyed, a badge landing on a phone UI): a touchscreen tap with its attack on the finger's RELEASE; a run of digits is a texture of taps on one track, not one per digit (mouse clicks, typing and pops on a phone were all rejected for this)"
+    },
+    "click": {
+      "class": "character",
+      "file": "Mouse Click - Computer Clicking.aiff",
+      "slices": [[2.44, 2.9]],
+      "level_db": -10,
+      "_": "a desktop cursor pressing something (and a desktop send): the mouse click, clip on the press frame (its attack sits about 2 f in); never on a phone"
+    },
+    "typing": {
+      "class": "bed",
+      "file": "Keyboard Typing.aiff",
+      "slices": [[3.84, 37.44]],
+      "level_db": 2,
+      "fit": "duration",
+      "_": "words typed on screen: real typing at a real level, cut to the typed span (the row carries dur; the slice runs to the file end only so any span fits); when the typing starts at a graphic-to-graphic cut it IS that cut's sound"
+    },
+    "ring": {
+      "class": "character",
+      "file": "Phone Dial Ring.wav",
+      "slices": [[4.588, 13.003]],
+      "level_db": -8,
+      "fit": "duration",
+      "_": "an incoming call that is answered, or that the speaker reacts to: the ring burst from where the speech or the picture says it rings (it may lead the card), hard-cut at the answer; the kit sets dur = answer - ring start, and the tap follows it"
+    },
+    "camera": {
+      "class": "transient",
+      "file": "Camera Clicks.mp3",
+      "slices": [[0.0, 0.334]],
+      "level_db": 0,
+      "lead_frames": 2,
+      "_": "a MONTAGE cut (every cut of a run of close-ups or screenshots cut to rhythm, its entry from a graphic included) or a camera prop: the full shutter at 0, and it IS that cut's sound, so no whoosh between sibling shots (pops on screenshots, and silence on montage cuts, were both replaced by this); a single captured page arriving is the quieter `camera-under`"
+    },
+    "camera-under": {
+      "class": "transient",
+      "file": "Camera Clicks.mp3",
+      "slices": [[0.0, 0.334]],
+      "level_db": -2,
+      "lead_frames": 2,
+      "_": "the quieter shutter for a SINGLE captured page or screenshot arriving outside a montage: under the cut-in whoosh that opens it (the whoosh leads, the shutter names what arrived) and on each cut to a sibling captured page (a CTA's page-to-page cut), 2 dB under the montage shutter, as he levelled both on his CTA"
+    },
+    "status-keys": {
+      "class": "tick",
+      "file": "Keys Up and Down.wav",
+      "slices": [[0.334, 0.667]],
+      "level_db": -5,
+      "_": "a device changing state (going live, connecting, signal bars lighting): key ticks, layered with `status-chime` on the next layer"
+    },
+    "status-chime": {
+      "class": "character",
+      "file": "Mac SFX 16.wav",
+      "slices": [[0.0, 0.727]],
+      "whole_file": true,
+      "level_db": -4,
+      "_": "the UI chime of that state change, layered on `status-keys`: the system talking, never the bell. Clip ON the frame: the split file starts on its attack (0.6 f in), so its attack lands just after the picture as his did; his 2 f lead was cut from the compilation, whose slice carried its own pre-roll"
+    },
+    "live": {
+      "class": "character",
+      "file": "Mac SFX 08.wav",
+      "slices": [[0.0, 0.668]],
+      "whole_file": true,
+      "level_db": -2,
+      "_": "a reachable / live / online badge: a UI chime clipped ON the badge frame (the split file's attack is 0.8 f in, so it lands just after the badge, as his did; a lead would put it before the picture); green is not completion, so availability never rings the bell (an automatic bell on a green badge was replaced by this)"
+    },
+    "blip": {
+      "class": "tick",
+      "file": "UI Data Loading Sound Effect - 128.mp3",
+      "slices": [[0.209, 0.584]],
+      "level_db": -5,
+      "_": "a connection lighting up: a short, louder blip of the working-bed file"
+    },
+    "error": {
+      "class": "character",
+      "file": "Error Buzz.wav",
+      "slices": [[0.0, 0.24]],
+      "whole_file": true,
+      "level_db": 0,
+      "_": "the negative VERDICT at the end of a build into overwhelm: after the last element lands, as the working bed cuts, and loud; never on the first red frame, where it was tried at -7 and said nothing"
+    },
+    "processing": {
+      "class": "bed",
+      "file": "UI Data Loading Sound Effect - 128.mp3",
+      "slices": [[0.57, 2.4]],
+      "level_db": -17,
+      "fit": "duration",
+      "_": "software working for seconds (logs pouring, a pile-up building, calls going out): a quiet bed from the work's start, cut hard where its payoff lands (the row carries dur); beds are not counted toward density"
+    },
+    "calling": {
+      "class": "bed",
+      "file": "UI Data Loading Sound Effect - 128.mp3",
+      "slices": [[0.167, 4.338]],
+      "level_db": -14,
+      "fit": "duration",
+      "fade_out_s": 2.2,
+      "_": "a calling or waiting state that resolves softly: the same file as a louder bed with a 2.2 s Constant Power fade-out on its tail, the only SFX fade in the look. sfx-plan carries fade_out_s into the planned row and the cut sheet, but no lane placer lays it yet, so after placement the fade is laid BY HAND on the lane (Premiere: a Constant Power audio transition of fade_out_s on the clip's tail) and named in the step-6 report; skipped, the bed hard-cuts at -14"
+    },
+    "payoff": {
+      "class": "character",
+      "file": "Bell Ding Sound Effect.wav",
+      "slices": [[0.0, 1.46]],
+      "level_db": -10,
+      "lead_frames": 4,
+      "_": "COMPLETION only (booked, sent, posted, landed in its board): the bell 4 f early so its attack rings with the visual; a status coming online is `live` or `status-chime`, never this"
+    },
+    "payoff-run": {
+      "class": "character",
+      "file": "Bell Ding Sound Effect.wav",
+      "slices": [[0.0, 1.46]],
+      "level_db": -13,
+      "lead_frames": 4,
+      "_": "the bell repeating in a row: each 3 dB under a single bell, because repetition reads as a pattern"
+    },
+    "strike": {
+      "class": "marker",
+      "file": "Pencils & Markers.mp3",
+      "slices": [[11.303, 12.054]],
+      "level_db": -3,
+      "fit": "duration",
+      "offset_frames": 2,
+      "_": "a strike-through or a stroke run: ONE continuous scribble spanning the whole run (fit to it), hot enough to read over a whoosh, on the layer below that whoosh; 2 f AFTER the stroke's tween start, because the 12 fps stepped render shows the first stroke up to 2 f after the tween begins and the slice's attack is on its first sample (the planner's clip on the tween start was early, and his hand move landed it exactly here)"
+    },
+    "drawOn": {
+      "class": "marker",
+      "file": "Pencils & Markers.mp3",
+      "slices": [[11.303, 12.054]],
+      "level_db": -3,
+      "fit": "duration",
+      "offset_frames": 2,
+      "_": "a registry draw-on resolves to the strike scribble (a marker is the stroke's own sound), 2 f after the tween start like `strike`"
+    },
+    "money": {
+      "class": "character",
+      "file": "Cash Register Cha-Ching  Sound Effect - 128.mp3",
+      "slices": [[0.35, 1.53]],
+      "level_db": -12,
+      "hand_only": true,
+      "_": "money arriving or revealed. The CHA's attack (src about 0.54) lands on the moment and the ching follows: the row sits so src 0.54 hits the figure's highlight or the payment's landing. A run of payments is `money-run` clips, each the cha alone, cut by the next, and this event last, ringing on through the ching (law 8). hand_only means sfx-plan never infers it and the kit never writes it: Claude writes the rows on the FIRST pass for exactly two moments, the headline money figure being revealed on screen and payments landing (a payment notification, a checkout completing), each row's note saying it is Claude's first-pass call so his own pass can be told apart. Never on every number on screen. WHY: you asked for it on both moments of one short (2026-10-15: 'we need a cha-ching sound' on the hook's revenue figure, 'the cha-ching needs to come in later, like when it starts highlighting'; 'let's do a cha-ching instead' of the chime on the payment notifications, 'they sort of cut each other off, and then the last one goes all the way through'), after a sibling short's price line; his hand pass laid the cha on each moment, the run 6 frames apart"
+    },
+    "money-run": {"class": "character", "file": "Cash Register Cha-Ching  Sound Effect - 128.mp3", "slices": [[0.542, 0.792]], "level_db": -12, "hand_only": true, "_": "a payment in a rapid run, every landing but the last: the cha alone, its attack on the landing, cut off by the next clip on the same layer; the run's last landing is `money`, left to ring. His hand pass (2026-10-15): five landings 6 frames apart, src 0.542-0.792 each, the last on to 1.50"},
+    "sizzle": {
+      "class": "bed",
+      "file": "Hot Sizzling - Sound Effect HD.mp3",
+      "slices": [[0.0, 2.6]],
+      "level_db": -26,
+      "fade_out_s": 0.4,
+      "hand_only": true,
+      "_": "something cooking on screen (a pan, a stove): a very faint bed from the moment the thing hits the heat, under the line, faded out. hand_only: laid on the creator's ask (2026-10-15: 'very subtly, very faintly, over cook up this offer', the stove graphic), never placed by the first pass"
+    },
+    "countUp": {
+      "class": "bed",
+      "file": "UI Data Loading Sound Effect - 128.mp3",
+      "slices": [[0.57, 2.4]],
+      "level_db": -17,
+      "fit": "duration",
+      "_": "a number stepping: the machine working, so the `processing` bed fit to the count"
+    },
+    "reveal": {
+      "class": "bed",
+      "file": "Keyboard Typing.aiff",
+      "slices": [[3.84, 37.44]],
+      "level_db": 2,
+      "fit": "duration",
+      "_": "a registry reveal (text typing on): the `typing` spec, cut to the reveal"
+    },
+    "riser": {"class": "bed", "file": "Riser.wav", "slices": [[0.0, 1.29]], "level_db": -12, "hand_only": true, "_": "his own hand edit (2026-10-15): a riser building into the first face-to-graphic switch after the hook's promise, src 0-1.29 laid so it ENDS 2 frames before that switch, the switch's own cut-in on it, -12 dB, on its own layer. A taste signal seen once: the step-6 report offers it, naming the switch it would lead into, and it is laid on his yes"},
+    "riseOut": null,
+    "exit": null,
+    "cut-out": null,
+    "flash": null,
+    "title-card": null,
+    "word-pop": null,
+    "word-flicker": null,
+    "word-negative": null,
+    "emphasis": null,
+    "gunshot": null,
+    "rec": null,
+    "highlighter": null,
+    "glow": null,
+    "_silent": "the nulls are DOCUMENTED silence, so a registry call never falls through to 'unknown': riseOut, exit, cut-out (exits, cuts back to the face and push-ins are silent; bare face carries only the music) · flash, word-flicker (no strobe entrance in this look) · title-card (no section cards on a short) · word-pop (retired: type never pops) · word-negative (a red word is not a verdict: it stays silent, and the negative hit is `error`, at the end of a build) · emphasis (a word that must hit is a `word-slam` or a `bump`) · gunshot, rec, highlighter (not in this format's vocabulary until the creator has heard one here) · glow (long-form's red box round a stat; a figure highlighted here sounds as its money cha-ching)",
+    "_slices": "a single-hit whoosh or chime file (Simple Whoosh 1/2, Whoosh Short 2, Fast Whoosh, Mac SFX 08/16, Error Buzz) is placed WHOLE; every other library file is multi-hit or long and is always sliced (2026-09-03). A fit=duration slice is an upper bound: the row's dur cuts it."
+  },
+  "second_voice": {"silence": true, "_": "sfx.md law 3, nothing over proof audio: while transcript/voices.json's other voice plays, sfx-plan.py drops every automatic row (the layout cut-ins and the kit rows included) except an overlay call card's own beats (ring, tap, riseIn, calling); a hand row stays. A map without this key (the house one) keeps its automatic rows under a second voice."},
+  "hand_entries": "hf-graphics/sfx-hand.json rows: {gid, event, at (comp seconds) | word (a span in a text comp), dur?, note?, level_db? (override), drop? ([events] to remove from that comp's automatic list, e.g. the pops a gunshot/payoff replaces), src?}. `src: \"kit\"` marks a row the kit wrote from a component's own motion (kit/engine.py): it is the AUTOMATIC first pass, not the creator's call, so it counts as automatic (a re-plan may replace it); a hand_only event is never written by the kit, nor as a hand row on a first pass (see `money`); a row without `src` is a hand row and outranks it.",
+  "_judgement": "2026-09-10: the palette is the DOCUMENTED map and only that (an undocumented library file cannot be heard by the planner or its author). The freedom is where a documented sound goes: data-sfx=\"<event>\" on the element names any event in this file, data-sfx=\"none\" silences one, a hand row does the same for an unbindable timing; data-sfx-file and a hand row's `file` are refused. A new sound enters here only after the creator has listened to it on a timeline, and its file lives in assets/sfx, never only in one job's folder."
+}

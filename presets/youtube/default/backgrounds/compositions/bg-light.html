@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=1920, height=1080"/>
+<title>bg-light</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+#root{position:relative;width:1920px;height:1080px;overflow:hidden;}
+/* light-gray field, brightest just above center, cooling toward the edges */
+#base{position:absolute;inset:0;
+  background:radial-gradient(ellipse 120% 95% at 50% 42%,
+    #f2f3f6 0%, #e8eaef 55%, #dde0e7 100%);}
+/* the vignette — navy-tinted so it stays in the brand's cool family */
+#vig{position:absolute;inset:0;
+  background:radial-gradient(ellipse 78% 72% at 50% 50%,
+    rgba(16,24,50,0) 22%, rgba(16,24,50,0.05) 40%, rgba(16,24,50,0.12) 54%,
+    rgba(16,24,50,0.22) 66%, rgba(16,24,50,0.33) 77%, rgba(16,24,50,0.44) 88%,
+    rgba(16,24,50,0.55) 100%);}
+</style></head>
+<body style="margin:0;background:#fff;">
+<div id="root" data-composition-id="main" data-width="1920" data-height="1080"
+     data-start="0" data-duration="6.0000">
+<div id="base"></div>
+<div id="vig"></div>
+</div>
+</body></html>

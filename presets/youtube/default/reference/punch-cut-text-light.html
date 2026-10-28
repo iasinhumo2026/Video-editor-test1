@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=3840, height=2160"/>
+<title>g22: one prompt, no further work, i didn't touch it (punch-cut · bg-light · full-screen · three scenes)</title>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script src="hf-anim.js"></script>
+<style>
+/* g22 · timeline 101.83507 → 106.40630 (DUR 4.57123 = 137 frames) · full-screen bg-light (timeline rate, no glow, grain in render.sh)
+   A SCENE in three phases (creative-moves.md move 2, rebuilt 2026-09-10 from four lines of type): the prompt window
+   slides up and types "one prompt."; it slides out LEFT as the hands-off scene slides in from the RIGHT — a cog and a
+   wrench pop in and get CROSSED OUT by a drawn marker X on "no further work" / "no further tune-ups"; then the scene RACKS OUT
+   under the payoff line, "i didn't touch it." rising word by word with "didn't" slamming. The camera pushes in
+   throughout. Both edges sit ON V1 cuts: the cut in at 101.835 is the entrance, the cut back at 106.406 the exit. */
+@font-face{font-family:'Inter';src:url('assets/Inter-Black.otf') format('opentype');font-weight:900;}
+@font-face{font-family:'Inter';src:url('assets/Inter-Bold.otf') format('opentype');font-weight:700;}
+@font-face{font-family:'Playfair Display';src:url('assets/PlayfairDisplay-Italic-VF.ttf') format('truetype');font-weight:400 900;font-style:italic;}
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--royal:#1e48ff;--ink:#0a1435;--red:#ff4d5e;--orange:#d97757;}
+#root{position:relative;width:3840px;height:2160px;overflow:hidden;font-family:'Inter',Helvetica,Arial,sans-serif;}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform:scale(2);transform-origin:0 0;}
+#base{position:absolute;inset:0;background:radial-gradient(ellipse 120% 95% at 50% 42%, #f2f3f6 0%, #e8eaef 55%, #dde0e7 100%);}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse 78% 72% at 50% 50%, rgba(16,24,50,0) 22%, rgba(16,24,50,0.05) 40%, rgba(16,24,50,0.12) 54%, rgba(16,24,50,0.22) 66%, rgba(16,24,50,0.33) 77%, rgba(16,24,50,0.44) 88%, rgba(16,24,50,0.55) 100%);}
+#float{position:absolute;inset:0;will-change:transform;}
+#content{position:absolute;inset:0;transform:scale(0.92);transform-origin:50% 50%;}
+/* THE RACK FOCUS as a BLUR LADDER + a DIM (creative-moves.md § THE RACK FOCUS): #scene stays sharp, and
+   #racked holds FOUR full-frame OPAQUE clones of the same template at rising blur, each fading in over the
+   last, then one dim layer darkens the whole frame on its own ramp. A single dark blurred clone crossfaded
+   over the bright field passes through a 50/50 mix, which reads gray and washed out before it reads dark;
+   opaque levels mean every in-between frame is a mix of two nearly identical images. Each level covers the
+   WHOLE FRAME (beside the scaled content, not inside it), carries its own copy of the field under the
+   scene, and puts its clone in .inner at #content's exact 0.92 (a clone at 1.0 is 8.7 % bigger and the rack
+   reads as a jump-zoom). Nothing BETWEEN #racked and #root gets overflow:hidden — that starves the dim's
+   overdraw and the frame edges never darken. #root's own clip is the frame and stays. */
+#scene{position:absolute;inset:0;}
+#racked{position:absolute;inset:0;}
+#racked .lvl{position:absolute;inset:0;opacity:0;will-change:opacity;}
+#racked .bgcopy{position:absolute;inset:0;
+  background:radial-gradient(ellipse 78% 72% at 50% 50%, rgba(16,24,50,0) 22%, rgba(16,24,50,0.05) 40%, rgba(16,24,50,0.12) 54%, rgba(16,24,50,0.22) 66%, rgba(16,24,50,0.33) 77%, rgba(16,24,50,0.44) 88%, rgba(16,24,50,0.55) 100%),
+             radial-gradient(ellipse 120% 95% at 50% 42%, #f2f3f6 0%, #e8eaef 55%, #dde0e7 100%);}
+#racked .blurwrap{position:absolute;inset:0;}
+#b1 .blurwrap{filter:blur(2.5px);}
+#b2 .blurwrap{filter:blur(5px);}
+#b3 .blurwrap{filter:blur(7.5px) saturate(0.92);}
+#b4 .blurwrap{filter:blur(10px) saturate(0.85);}
+#dim{position:absolute;inset:-60px;background:#05070d;opacity:0;will-change:opacity;}
+#racked .inner,#type .inner{position:absolute;inset:0;transform:scale(0.92);transform-origin:50% 50%;}
+#type{position:absolute;inset:0;}
+.cam{position:absolute;inset:0;will-change:transform;}
+.sc{position:absolute;inset:0;opacity:0;will-change:transform,opacity;}
+/* scene 1: the prompt window (the g5 window, small), typed on */
+.win{position:absolute;left:410px;top:380px;width:1100px;height:320px;border-radius:18px;background:#0f1014;border:1px solid rgba(255,255,255,0.10);
+  box-shadow:0 30px 80px rgba(10,20,53,0.35), 0 0 0 1px rgba(0,0,0,0.9);overflow:hidden;}
+.bar{position:absolute;left:0;top:0;width:1100px;height:46px;background:#17181d;border-bottom:1px solid rgba(255,255,255,0.07);}
+.tl{position:absolute;top:16px;width:14px;height:14px;border-radius:7px;}
+.tl.r{left:18px;background:#ff5f57;} .tl.y{left:40px;background:#febc2e;} .tl.g{left:62px;background:#28c840;}
+.title{position:absolute;left:0;top:12px;width:1100px;text-align:center;font-size:19px;color:#8b8f98;font-weight:700;}
+.pr{position:absolute;left:48px;top:120px;font-family:'SF Mono X',Menlo,monospace;font-size:72px;line-height:90px;color:var(--orange);}
+.ptext{position:absolute;left:112px;top:120px;width:940px;font-family:'SF Mono X',Menlo,monospace;font-size:72px;line-height:90px;color:#e6e6ea;white-space:nowrap;}
+.car{display:inline-block;width:34px;height:70px;margin-left:10px;vertical-align:-8px;background:var(--orange);border-radius:5px;}
+/* scene 2: the hands-off scene — one literal prop per line (work = a cog, tune-ups = a wrench), each crossed out by a
+   marker X DRAWN across it with the prop still visible (a chip on top would hide the thing being crossed out) */
+.cl{position:absolute;top:300px;width:640px;height:480px;}
+.c1{left:240px;} .c2{left:1040px;}
+.prop{position:absolute;left:170px;top:40px;width:300px;height:300px;opacity:0;will-change:transform,opacity;}
+.prop svg{display:block;width:300px;height:300px;overflow:visible;}
+.mx{position:absolute;left:140px;top:10px;width:360px;height:360px;opacity:0;}
+.mx path{stroke:var(--red);stroke-width:28;fill:none;stroke-linecap:round;}
+.line{position:absolute;left:0;top:380px;width:640px;text-align:center;font-weight:900;font-size:58px;letter-spacing:-2.2px;color:var(--ink);opacity:0;will-change:transform,opacity;white-space:nowrap;}
+/* the payoff line, over the racked scene: white, the stamp word Playfair italic red with its underline */
+.l4{position:absolute;left:0;top:470px;width:1920px;height:140px;line-height:140px;text-align:center;white-space:nowrap;font-weight:900;font-size:112px;letter-spacing:-4.5px;color:#f4f7ff;}
+.l4 .w{display:inline-block;opacity:0;will-change:transform,opacity;margin:0 14px;position:relative;}
+.l4 .em{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:700;font-size:116px;letter-spacing:-3.2px;color:var(--red);}
+.ul{position:absolute;left:0;bottom:6px;width:100%;height:16px;opacity:0;overflow:visible;}
+.ul path{stroke:var(--red);stroke-width:12;fill:none;stroke-linecap:round;}
+</style></head>
+<body style="margin:0;background:#000;">
+<div id="root" data-composition-id="main" data-width="3840" data-height="2160" data-start="0" data-duration="4.57123">
+<div id="stage">
+<div id="base"></div>
+<div id="vig"></div>
+<div id="float">
+  <div id="content"><div id="scene"></div></div>
+  <div id="racked"><div class="lvl" id="b1"><div class="bgcopy"></div><div class="blurwrap"><div class="inner" id="rin1"></div></div></div><div class="lvl" id="b2"><div class="bgcopy"></div><div class="blurwrap"><div class="inner" id="rin2"></div></div></div><div class="lvl" id="b3"><div class="bgcopy"></div><div class="blurwrap"><div class="inner" id="rin3"></div></div></div><div class="lvl" id="b4"><div class="bgcopy"></div><div class="blurwrap"><div class="inner" id="rin4"></div></div></div><div id="dim"></div></div>
+  <div id="type"><div class="inner">
+      <div class="l4"><span class="w" id="w1">i</span><span class="w em" id="w2">didn't<svg class="ul" id="ul" viewBox="0 0 100 16" preserveAspectRatio="none"><path d="M 4 8 L 96 8"/></svg></span><span class="w" id="w3">touch</span><span class="w" id="w4">it.</span></div>
+  </div></div>
+</div>
+<template id="tpl">
+  <div class="cam">
+    <div class="sc sc1">
+      <div class="win">
+        <div class="bar"><div class="tl r"></div><div class="tl y"></div><div class="tl g"></div><div class="title">claude · video-editor</div></div>
+        <div class="pr">&gt;</div><div class="ptext"><span class="txt"></span><span class="car"></span></div>
+      </div>
+    </div>
+    <div class="sc sc2">
+      <div class="cl c1">
+        <div class="prop p1"><svg viewBox="0 0 100 100"><polygon points="50,4 58,14 71,9 74,22 88,26 83,39 93,50 83,61 88,74 74,78 71,91 58,86 50,96 42,86 29,91 26,78 12,74 17,61 7,50 17,39 12,26 26,22 29,9 42,14" fill="#0a1435"/><circle cx="50" cy="50" r="17" fill="#e8eaef"/></svg></div>
+        <svg class="mx m1" viewBox="0 0 360 360"><path d="M 40 40 L 320 320"/><path d="M 320 40 L 40 320"/></svg>
+        <div class="line">no further work.</div>
+      </div>
+      <div class="cl c2">
+        <div class="prop p2"><svg viewBox="0 0 100 100"><path d="M 70 8 a 22 22 0 0 0 -26 30 L 12 70 a 10 10 0 0 0 14 14 L 58 52 a 22 22 0 0 0 30 -26 l -14 14 -12 -12 z" fill="#1e48ff"/></svg></div>
+        <svg class="mx m2" viewBox="0 0 360 360"><path d="M 40 40 L 320 320"/><path d="M 320 40 L 40 320"/></svg>
+        <div class="line">no further tune-ups.</div>
+      </div>
+    </div>
+  </div>
+</template>
+</div>
+</div>
+<script>
+// comp starts ON the V1 cut at 101.83507. Word syncs (word − 101.83507 − 0.04):
+// One 101.991→0.116 · no 103.052→1.177 · no 103.932→2.057 · I 105.714→3.839 · didn't 105.814→3.939 · touch 106.054→4.179 · it 106.334→4.459
+const DUR = 4.57123;
+const H = HF.init({fps: 30000/1001, dur: DUR});
+const {tl, F, pop, slam, riseIn, slideIn, slideOut, float, camera, reveal} = H;   // slam: the payoff word
+
+const tpl = document.getElementById('tpl').content;
+for (const id of ['scene', 'rin1', 'rin2', 'rin3', 'rin4']) document.getElementById(id).appendChild(tpl.cloneNode(true));   // sharp scene + one clone per blur level, all from the one template
+for (const p of document.querySelectorAll('.ul path, .mx path')) { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; }
+
+float('#float', 0, DUR, 'subtle');
+camera('.cam', 0, DUR, {scale: 1.00}, {scale: 1.05});                     // THE CAMERA
+// PHASE 1 (frame 0): the prompt window slides up from the bottom; "one prompt." types on as it is spoken; the caret blinks
+slideIn('.sc1', 0, 'bottom', 760);                                       // from just below the frame, so it is in view on frame 1
+reveal('.txt', 0.10, 'one prompt.', {pattern: [1, 1]});
+for (let t = 0.6, on = false; t < 1.177; t += 10 * F, on = !on) tl.set('.car', {opacity: on ? 1 : 0}, t);
+// PHASE 2 ("no" 1.177): THE FLOW READS RIGHTWARD — the window leaves to the LEFT as the hands-off scene arrives from the RIGHT,
+// and inside it the tools arrive left to right: one direction, like a carousel advancing ("→ then →, never ← then →")
+slideOut('.sc1', 1.177, 'left');
+slideIn('.sc2', 1.177, 'right');
+// a marker X drawn across a prop: two strokes, the second starting as the first lands (the prop stays visible)
+const markX = (sel, at) => { tl.set(sel, {opacity: 1}, at);
+  tl.to(sel + ' path:first-child', {strokeDashoffset: 0, duration: 6 * F, ease: 'power2.out'}, at);
+  tl.to(sel + ' path:last-child', {strokeDashoffset: 0, duration: 6 * F, ease: 'power2.out'}, at + 5 * F); };
+pop('.p1', 1.30); markX('.m1', 1.62); riseIn('.c1 .line', 1.62, 16);      // the cog pops, gets crossed out on "no further work."
+pop('.p2', 2.10); markX('.m2', 2.40); riseIn('.c2 .line', 2.40, 16);      // the wrench pops, gets crossed out on "no further tune-ups."
+// PHASE 3 ("I" 3.839): THE RACK FOCUS carries the payoff line — the scene blurs and darkens, the words sit sharp on top.
+// The rack LEADS the type by 12 frames, so the scene is already soft and dark when the words land.
+const RACK = 3.839 - 12 * F;
+[0, 4, 8, 12].forEach((f, i) => tl.to('#b' + (i + 1), {opacity: 1, duration: 8 * F, ease: 'sine.inOut'}, RACK + f * F));   // blur 2.5 -> 5 -> 7.5 -> 10, each opaque level over the last
+tl.to('#dim', {opacity: 0.72, duration: 20 * F, ease: 'sine.inOut'}, RACK);                    // the darken, one smooth ramp across the whole rack
+tl.set('#content', {opacity: 0}, RACK + 21 * F);                                               // hidden under the opaque b4 by now: no visible change, no ghost duplicate
+riseIn('#w1', 3.839, 16); slam('#w2', 3.939); riseIn('#w3', 4.179, 16); riseIn('#w4', 4.459, 16);
+tl.set('#ul', {opacity: 1}, 4.0);
+tl.to('#ul path', {strokeDashoffset: 0, duration: 9 * F, ease: 'power2.out'}, 4.0);
+// no exit: the hard cut back on the V1 cut at 106.406 is the exit
+H.finish();
+</script></body></html>

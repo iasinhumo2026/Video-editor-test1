@@ -1,0 +1,89 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/setup-check.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Bash(brew:*)",
+      "Bash(winget:*)",
+      "Bash(uv:*)",
+      "Bash(uvx:*)",
+      "Bash(npm install:*)",
+      "Bash(npm i:*)",
+      "Bash(npx:*)",
+      "Bash(pip install:*)",
+      "Bash(pip3 install:*)",
+      "Bash(python3 -m pip install:*)",
+      "Bash(xcode-select --install)",
+      "Bash(git clone:*)",
+      "Bash(hyperframes:*)",
+      "Bash(ffmpeg:*)",
+      "Bash(ffprobe:*)",
+      "Bash(bash workflows/*)",
+      "Bash(./workflows/*)",
+      "Bash(./finalize.sh:*)",
+      "Bash(bash .claude/skills/*)",
+      "Bash(RENDER=0 bash .claude/skills/rough-cut/scripts/splice.sh:*)",
+      "Bash(./lanes/*)",
+      "Bash(bash lanes/*)",
+      "Bash(node lanes/*)",
+      "Bash(./render.sh)",
+      "Bash(./render.sh:*)",
+      "Bash(MBLUR=1 MBLUR_SS=8 MBLUR_SHUTTER=5 ./render.sh:*)",
+      "Bash(npm_config_before=2026-10-01T23:59:59Z npx -y hyperframes@0.8.105:*)",
+      "Bash(shasum:*)",
+      "mcp__premiere-pro",
+      "mcp__davinci-resolve",
+      "mcp__splicekit",
+      "Bash(./setup.sh)",
+      "Bash(./setup.sh:*)",
+      "Bash(./check-setup.sh)",
+      "Bash(./check-setup.sh:*)",
+      "Bash(bash setup.sh)",
+      "Bash(bash setup.sh:*)",
+      "Bash(bash check-setup.sh)",
+      "Bash(bash check-setup.sh:*)",
+      "Bash(uv run update.py)",
+      "Bash(uv run update.py:*)",
+      "Bash(bash .claude/hooks/setup-check.sh)",
+      "Bash(brew install:*)",
+      "Bash(brew upgrade node)",
+      "Bash(winget install:*)",
+      "Bash(claude mcp reset-project-choices)",
+      "Bash(./lanes/premiere/premiere-up.sh)",
+      "Bash(./lanes/premiere/premiere-up.sh:*)",
+      "Bash(node lanes/premiere/premiere-bridge.mjs:*)",
+      "Bash(./setup-premiere.sh)",
+      "Bash(./setup-premiere.sh:*)",
+      "Bash(./setup-resolve.sh)",
+      "Bash(./setup-resolve.sh:*)",
+      "Bash(./setup-finalcut.sh)",
+      "Bash(./setup-finalcut.sh:*)",
+      "Bash(uv run lanes/finalcut/sk.py:*)",
+      "Bash(uv run lanes/finalcut/replay.py:*)",
+      "Bash(uv run lanes/finalcut/import.py:*)",
+      "Bash(uv run lanes/finalcut/verify.py:*)",
+      "Bash(uv run lanes/finalcut/share.py:*)",
+      "Bash(uv run lanes/finalcut/export.py:*)",
+      "mcp__premiere-pro__ping",
+      "mcp__davinci-resolve__get_resolve_status",
+      "mcp__splicekit__bridge_status"
+    ]
+  },
+  "env": {
+    "PYTHONUTF8": "1",
+    "PYTHONIOENCODING": "utf-8"
+  }
+}

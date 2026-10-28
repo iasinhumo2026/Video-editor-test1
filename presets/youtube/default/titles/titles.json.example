@@ -1,0 +1,5 @@
+{
+  "t-setup": {"lines": ["the setup"], "dur": 3.0},
+  "t-prereqs": {"lines": ["what you need", "first"], "dur": 3.0},
+  "t-outro": {"lines": ["that's a wrap"], "dur": 3.0}
+}

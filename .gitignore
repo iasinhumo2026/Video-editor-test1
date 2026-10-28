@@ -1,0 +1,65 @@
+# This folder is a git repository so a new version of the editor merges in without touching your
+# changes (update.py). These paths stay out of it: never tracked, never changed by an update.
+
+# Your jobs: footage and edits stay local (the _sample skeleton is tracked, never what is put in it)
+/projects/*
+!/projects/_sample/
+/projects/_sample/*
+!/projects/_sample/*/
+/projects/_sample/*/*
+!/projects/_sample/*/.gitkeep
+
+# Media and downloads dropped at the top of this folder
+/*.mp4
+/*.MP4
+/*.mov
+/*.MOV
+/*.m4a
+/*.wav
+/*.mp3
+/*.mxf
+/*.braw
+/*.r3d
+/*.zip
+/video-editor*/
+
+# Secrets and this machine's own wiring
+.env
+/.mcp.json
+.claude/settings.local.json
+/.setup-complete
+/.setup-hyperframes-ok
+/.setup-npx-frozen
+/.setup-sac-ok
+/.setup-install.log
+/.setup-restarts
+/.setup-restarted
+/.setup-optional-failed
+/.setup-second-install
+/.ve-write-probe
+
+# Installed engines and dependencies (./setup.sh and the lane installers rebuild them)
+/vendor/
+node_modules/
+
+# Caches and OS junk
+.DS_Store
+._*
+Thumbs.db
+desktop.ini
+__pycache__/
+*.pyc
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+work-*/
+
+# Renders and templates the tools regenerate next to their source
+presets/youtube/default/titles/renders/
+presets/youtube/default/backgrounds/renders/bg-*-?.mp4
+presets/youtube/default/backgrounds/renders/*-preview.png
+lanes/premiere/premiere-templates/adjustment-layer-*.prproj
+lanes/premiere/premiere-templates/youtube-1080p-*.epr
+lanes/premiere/premiere-templates/youtube-2160p-h264-cbr80*.epr
+lanes/premiere/premiere-templates/instagram-1080x1920-h264-cbr[1-9]-23976.epr
+lanes/premiere/premiere-templates/instagram-1080x1920-h264-cbr1[0-3]-23976.epr

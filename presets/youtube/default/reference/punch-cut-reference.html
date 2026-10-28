@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=1920, height=1080"/>
+<title>edited</title>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script src="hf-anim.js"></script>  <!-- THE REGISTRY as code; bare name, same as comp-scaffold.html -->
+<style>
+@font-face{font-family:'Playfair Display';
+  src:url('assets/PlayfairDisplay-Italic-VF.ttf') format('truetype');
+  font-weight:400 900;font-style:italic;font-display:block;}
+*{margin:0;padding:0;box-sizing:border-box;}
+#root{position:relative;width:1920px;height:1080px;overflow:hidden;}
+/* A render at a MULTIPLE of 1080 (a 4K master): #root becomes 3840x2160 (data-width/height too) and the whole 1080 layout sits inside
+   #stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform:scale(2);transform-origin:0 0} — NEVER #root{zoom:2}:
+   Chrome double-resolves percentage transform-origins and gradient positions under CSS zoom (three punch-cuts shipped off-centre,
+   2026-09-07). Prove the re-render with workflows/render-diff.py against the 1080 render; graphics-qa.py's `parity` check does too. */
+/* the locked bg-light field (grain comes from the ffmpeg post-pass) — static, does not slide */
+#base{position:absolute;inset:0;
+  background:radial-gradient(ellipse 120% 95% at 50% 42%,
+    #f2f3f6 0%, #e8eaef 55%, #dde0e7 100%);}
+#vig{position:absolute;inset:0;
+  background:radial-gradient(ellipse 78% 72% at 50% 50%,
+    rgba(16,24,50,0) 22%, rgba(16,24,50,0.05) 40%, rgba(16,24,50,0.12) 54%,
+    rgba(16,24,50,0.22) 66%, rgba(16,24,50,0.33) 77%, rgba(16,24,50,0.44) 88%,
+    rgba(16,24,50,0.55) 100%);}
+
+#scene1,#scene2{position:absolute;inset:0;will-change:transform;}
+
+/* scene 1: the mascot hero */
+/* the float layer — absolute+inset:0 so #guyWrap's left/top still resolve against the
+   full frame once the transform makes this the containing block. */
+#guyFloat{position:absolute;inset:0;will-change:transform;}
+#guyWrap{position:absolute;left:640px;top:105px;width:640px;height:640px;
+  opacity:0;will-change:transform,opacity;transform-origin:50% 55%;}
+#guyWrap img{position:absolute;left:0;top:0;width:640px;}
+#guyWrap .glow1{filter:blur(90px);opacity:0.38;transform:scale(1.06);}
+#guyWrap .glow2{filter:blur(34px);opacity:0.30;}
+#cap{position:absolute;left:0;top:790px;width:1920px;text-align:center;}
+.w{position:relative;display:inline-block;margin:0 15px;
+  font-family:Helvetica,'Helvetica Neue',Arial,sans-serif;font-weight:700;
+  font-size:122px;line-height:132px;letter-spacing:-5.4px;color:#111;
+  opacity:0;will-change:transform,opacity;}
+/* the emphasis font: Playfair Display Italic w700 (the locked two-font system) */
+.w.serif{font-family:'Playfair Display',Georgia,serif;font-weight:700;
+  font-style:italic;font-size:126px;letter-spacing:-3.5px;}
+#arrow{position:absolute;left:400px;top:420px;opacity:0;}
+#arrow path{stroke:#111;stroke-width:15;fill:none;
+  stroke-linecap:round;stroke-linejoin:round;}
+#arrow .head{fill:#111;stroke:none;}
+
+/* scene 2: "one shot / one go" + self-made vector bullet holes */
+#scene2{transform:translate3d(1920px,0,0);}
+#shotline{position:absolute;left:0;top:330px;width:1920px;text-align:center;
+  font-family:Helvetica,'Helvetica Neue',Arial,sans-serif;font-weight:700;
+  font-size:210px;line-height:220px;letter-spacing:-9.2px;color:#111;}
+#goline{position:absolute;left:0;top:580px;width:1920px;text-align:center;}
+#goline .w{font-size:150px;line-height:160px;letter-spacing:-6.6px;}
+.hole{position:absolute;opacity:0;will-change:transform,opacity;}
+</style></head>
+<body style="margin:0;background:#000;">
+<div id="root" data-composition-id="main" data-width="1920" data-height="1080"
+     data-start="0" data-duration="4.2700">
+<div id="base"></div>
+<div id="vig"></div>
+
+<div id="scene1">
+<div id="guyFloat">
+<div id="guyWrap">
+  <!-- the mascot png is a personal-brand asset (assets/logos/, excluded from client packages) —
+       swap in any image; the markup is the reference, not the artwork. -->
+  <img class="glow1" src="../../../../assets/logos/claude-guy.png" alt=""/>
+  <img class="glow2" src="../../../../assets/logos/claude-guy.png" alt=""/>
+  <img class="sharp" src="../../../../assets/logos/claude-guy.png" alt=""/>
+</div>
+</div>
+<svg id="arrow" width="260" height="400" viewBox="0 0 260 400">
+  <path id="curve" d="M 150 350 C 40 300, 30 180, 170 80"/>
+  <polygon class="head"/>
+</svg>
+<div id="cap">
+<span class="w" data-t="0.00">edited</span><span class="w" data-t="0.30">by</span><span class="w serif" data-t="0.54">Claude</span>
+</div>
+</div>
+
+<div id="scene2">
+<div id="shotline">one shot</div>
+<div id="goline"><span class="w" data-t="3.359">one</span><span class="w" data-t="3.540">go</span></div>
+<svg class="hole" id="hole1" width="230" height="230" viewBox="-20 -20 240 240"
+     style="left:1300px;top:190px;transform:rotate(12deg);">
+  <polygon fill="#111" points="133,100 131,127 111,126 84,134 77,121 57,98 73,81 91,60 107,73 133,82"/>
+  <polygon fill="#111" points="192,125 123,113 127,100"/>
+  <polygon fill="#111" points="141,213 102,127 115,122"/>
+  <polygon fill="#111" points="49,161 78,115 89,124"/>
+  <polygon fill="#111" points="-1,73 77,87 73,100"/>
+  <polygon fill="#111" points="70,17 98,73 85,78"/>
+  <polygon fill="#111" points="174,12 122,85 111,76"/>
+  <polygon fill="#111" points="170,81 127,100 123,87"/>
+  <polygon fill="#3a3f47" points="120,100 116,120 98,118 82,112 84,92 100,84 116,86"/>
+</svg>
+<!-- hole2 sits at x308 so the composed box (both lines + all three holes, ink x315-1606) centres on x960: at x400 the
+     shipped reference failed graphics-qa.py's centre gate by +47 px (2026-10-13) -->
+<svg class="hole" id="hole2" width="175" height="175" viewBox="-20 -20 240 240"
+     style="left:308px;top:545px;transform:rotate(140deg);">
+  <polygon fill="#111" points="136,102 125,115 109,142 91,132 66,121 74,103 72,77 88,73 117,61 126,80"/>
+  <polygon fill="#111" points="184,171 115,122 124,111"/>
+  <polygon fill="#111" points="85,184 89,124 102,127"/>
+  <polygon fill="#111" points="-16,120 73,98 76,111"/>
+  <polygon fill="#111" points="36,36 87,77 77,87"/>
+  <polygon fill="#111" points="134,6 115,78 102,73"/>
+  <polygon fill="#3a3f47" points="118,100 112,118 96,120 84,108 88,90 104,82 114,88"/>
+</svg>
+<svg class="hole" id="hole3" width="145" height="145" viewBox="-20 -20 240 240"
+     style="left:1470px;top:680px;transform:rotate(261deg);">
+  <polygon fill="#111" points="131,98 129,126 112,133 89,126 69,128 64,99 73,83 92,61 110,67 124,86"/>
+  <polygon fill="#111" points="189,116 124,111 127,98"/>
+  <polygon fill="#111" points="119,210 98,127 111,124"/>
+  <polygon fill="#111" points="32,139 74,107 81,119"/>
+  <polygon fill="#111" points="-4,40 81,81 74,93"/>
+  <polygon fill="#111" points="100,14 107,74 93,74"/>
+  <polygon fill="#111" points="187,50 126,93 119,81"/>
+  <polygon fill="#3a3f47" points="116,98 114,116 98,120 84,110 86,92 100,82 112,86"/>
+</svg>
+</div>
+</div>
+<script>
+// Two-scene punch graphic. Scene 1 (mascot hero) slides off left as scene 2
+// ("one shot / one go" + vector bullet holes) slides in from the right on the
+// static background. House motion throughout; timings are comp-relative
+// (comp sits at 2.035 on the timeline), spoken-word syncs carry the 80ms lead.
+const DUR = 4.27;
+
+// The registry is LOADED, never retyped (animations.md § it ships as CODE). Everything this
+// comp animates — the flash, the float, the arrow, the rise, the pops, the slide — is a call
+// into hf-anim.js, which is what a hand comp copies into its job's gfx/ folder.
+const H = HF.init({fps: 30000/1001, dur: DUR});
+const {tl, F, pop, flash, riseIn, float, arrow, drawOn} = H;
+
+arrow('#arrow');   // ONCE per comp, AFTER any glow/bloom clone: heads are computed, never typed
+
+// ── scene 1 entrances ──
+// mascot: `flash` — the strobe entrance (timeline-rate comps only; it is banned at 12 fps)
+flash('#guyWrap', 0);
+// hold life: THE FLOAT, MEDIUM preset — THIS graphic is where the medium numbers come
+// from. It spans the WHOLE composition, so the mascot is already floating THROUGH the
+// flash rather than starting once the entrance finishes; the flash animates
+// #guyWrap's opacity and the float animates its #guyFloat wrapper, so they compose.
+float('#guyFloat', 0, DUR, 'medium');
+// the caption words RISE (type/cards/panels rise, objects pop), 30px at this 122px type
+for (const el of document.querySelectorAll('#cap .w')) riseIn(el, +el.dataset.t, 30);
+drawOn('#arrow', 0.22);
+
+// ── the slide: scene 1 off left, scene 2 in from the right (timeline 4.30s) ──
+// THE REGISTRY's slide family (animations.md): the two halves are NOT the same move.
+// OUT is 0.38s power3.inOut; IN is 0.75s power2.out — an element crossing a frame edge
+// covers real distance, and power3 dumps half of it into step one, which reads as a
+// teleport followed by a crawl. Never run the in-slide on the out-slide's numbers.
+const SLIDE_T = 2.265;
+H.slideOut('#scene1', SLIDE_T, 'left');
+H.slideIn('#scene2', SLIDE_T, 'right');
+
+// ── bullet holes: bam, bam, bam — right after "shot" lands (timeline 4.85 / 5.03 / 5.16).
+// THE REGISTRY `pop`: they are free-standing OBJECTS, so they pop (type/cards/panels would
+// rise), and they are PEERS doing the same job, so all three share one entrance (the
+// variation principle). NOTE: this comp used to stamp them with the retired 1.45x
+// scale-punch — that move is a defect now, not a variant; if you find it in an old comp,
+// replace it with a `pop` call exactly like this.
+for (const [id, t] of [['#hole1', 2.815], ['#hole2', 2.995], ['#hole3', 3.125]])
+  pop(id, Math.round(t / F) * F);
+
+// ── "one go": the words rise at the spoken times (data-t already leads by 80ms) ──
+for (const el of document.querySelectorAll('#goline .w')) riseIn(el, +el.dataset.t, 30);
+
+H.finish();   // pins DUR, rewinds, exposes window.__timelines.main
+</script></body></html>

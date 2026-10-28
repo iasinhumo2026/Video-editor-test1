@@ -1,0 +1,16 @@
+{
+  "p1": {
+    "phrase": "this video that you're watching right now",
+    "lines": ["this video that you're", "watching right now"]
+  },
+  "p2-beside-face": {
+    "phrase": "one shot",
+    "pos": "left",
+    "size": 110
+  },
+  "p3-dark-on-bright": {
+    "phrase": "no cap",
+    "color": "#111",
+    "glow": false
+  }
+}

@@ -1,0 +1,21 @@
+{
+ "_README": "Transcription fixes for your talking-head videos. Lives at the REPO ROOT: it is pipeline plumbing, not a look, and four consumers read it (export-transcript.py, scan-transcript.py, and both caption build.py files), so it belongs to none of them. Despite fixing words you may also see in captions, this is NOT a captions file: it is applied ONCE to the canonical transcript (outputs/<job>.transcript.json) at pipeline step 2, when rough-cut splices it, so the fix flows to graphics AND captions AND every format — long-form inherits it while never getting a burned-in caption at all. The raw transcript/words.json is left untouched. 'auto' = whole-word, case-insensitive replacements applied silently, matched ONE WORD AT A TIME — keys must be single-token (a multi-word key like 'open ai' can never match). 'flag' = ambiguous words (real word OR a mishear) PRINTED for you to eyeball in context each run. For a one-off fix on a single video, drop projects/<job>/corrections.local.json (same {auto,flag} shape) — it merges on top. Override the path with $TRANSCRIPT_CORRECTIONS. Add your own brand and product names here; grow the file as new mistranscriptions show up.",
+ "auto": {
+  "youtube": "YouTube",
+  "tiktok": "TikTok",
+  "instagram": "Instagram",
+  "iphone": "iPhone",
+  "ios": "iOS",
+  "api": "API",
+  "apis": "APIs",
+  "ai": "AI",
+  "ui": "UI",
+  "ux": "UX",
+  "url": "URL",
+  "saas": "SaaS",
+  "ceo": "CEO",
+  "diy": "DIY",
+  "faq": "FAQ"
+ },
+ "flag": []
+}

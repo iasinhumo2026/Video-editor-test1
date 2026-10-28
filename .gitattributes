@@ -1,0 +1,5 @@
+# Every text file is LF on every OS. Git for Windows ships core.autocrlf=true system-wide, so a plain
+# clone there checked out every .sh/.py as CRLF (2026-10-13); this wins over that setting, and a CRLF
+# save from a Windows editor is normalized at commit. Binaries (media, fonts, models) are detected and
+# left alone.
+* text=auto eol=lf

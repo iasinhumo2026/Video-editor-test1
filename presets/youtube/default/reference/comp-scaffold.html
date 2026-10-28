@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=1920, height=1080"/>
+<title>gN: WHAT IT IS (template · overlay|punch-cut bg-dark|bg-light · zone)</title>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script src="hf-anim.js"></script>  <!-- bare name: the render base is the gfx/ root (assets/… resolve the same way); "../hf-anim.js" trips hyperframes' invalid_parent_traversal_in_asset_path lint (2026-09-03) -->
+<style>
+/* gN · timeline START → END (DUR x.xx) · alpha overlay | full-screen bg-dark (STEP_FPS=12 + glow) | bg-light
+   THE LOW BAND (anything centred under his face): yTOP → y1030, measured per shoot (chin-line.py).
+   Side callouts are MEASURED per window, never a fixed box: chin-line.py --edl prints the zone (x80 → head−60 on the left,
+   head+60 → x1840 on the right; the card as wide as the room, cap 620) — default-overlay-style.md § SIDE CALLOUTS. Lower-third x120 y780 w900 h170.
+   Copy this file per graphic. Every entrance/exit is a call into hf-anim.js, never retype a helper.
+   The @font-face files are copied into the gfx root's assets/ (graphics-qa.py `font` FAILs a missing one); the Inter
+   fallback on #root keeps a face that did not load off Chrome's default serif (Times on a machine without SF Pro). */
+@font-face{font-family:'Inter';src:url('assets/Inter-Black.otf') format('opentype');font-weight:900;}
+@font-face{font-family:'Inter';src:url('assets/Inter-Bold.otf') format('opentype');font-weight:700;}
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--royal:#1e48ff;--sky:#57c9f0;--txt:#e8f0ff;--muted:#8fa6d4;}
+#root{position:relative;width:1920px;height:1080px;overflow:hidden;background:transparent;font-family:'Inter',Inter,sans-serif;}
+/* A render at a MULTIPLE of 1080 (a 4K master): #root becomes 3840x2160 (data-width/height too) and the whole 1080 layout sits inside
+   #stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform:scale(2);transform-origin:0 0} — NEVER #root{zoom:2}:
+   Chrome double-resolves percentage transform-origins and gradient positions under CSS zoom (three punch-cuts shipped off-centre,
+   2026-09-07). Prove the re-render with workflows/render-diff.py against the 1080 render; graphics-qa.py's `parity` check does too. */
+/* full-screen only: the locked field goes here as #base + #vig (see reference/punch-cut-reference.html); overlays have none */
+/* THE FLOAT rides a wrapper that covers the frame; entrance/exit tweens live on the CHILD, never on this */
+#float{position:absolute;inset:0;will-change:transform;}
+/* every positioned element names its offsets, a position:absolute with none silently lands at 0,0 of its parent */
+.card{position:absolute;left:120px;top:150px;width:620px;opacity:0;will-change:transform,opacity;}
+</style></head>
+<body style="margin:0;background:transparent;">
+<div id="root" data-composition-id="main" data-width="1920" data-height="1080" data-start="0" data-duration="2.0000">
+<div id="float">
+  <div class="card" id="card">…</div>
+</div>
+</div>
+<script>
+// comp starts at START on the timeline. Syncs (word − START − 0.08): word 12.34→0.00 · …
+const DUR = 2.0;                                        // == data-duration above, == the placed clip length
+// fps MUST equal the base footage rate (ffprobe the raw), and the render's FPS= must match it:
+// 30000/1001 for 29.97, 24000/1001 for 23.976.
+const H = HF.init({fps: 30000/1001, dur: DUR /* , stepFps: 12  ← bg-DARK full-screens only */});
+const {tl, F, pop, slam, riseIn, exit, float, countUp, reveal} = H;
+
+float('#float', 0, DUR, 'subtle');                      // whole graphic = subtle; ONE hero element = medium
+riseIn('#card', 0);                                     // type/cards/panels RISE; objects POP; peers share one entrance
+// pop('.chip', 0.42);
+// countUp('#num', 0.30, 0.8, 4312, v => '$' + v.toLocaleString('en-US'));
+exit('#card');                                          // riseOut two frames before DUR + hard-kill (omit on a full-screen: the cut is the exit)
+H.finish();
+</script></body></html>
